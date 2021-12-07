@@ -1,0 +1,54 @@
+{
+  "Bezeichner": "Blechstanze",
+  "Hersteller": "FerroCut gmbh",
+  "Standort": {
+    "Halle": 2,
+    "Abteilung": "Entwicklung",
+    "Platz": 17
+  },
+    "Wartung":[
+    {
+      "Datum": "14.1.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "10.2.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "11.3.2019",
+      "von": "Mueller"
+    },  
+    {
+      "Datum": "14.7.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "10.8.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "18.9.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "11.10.2019",
+      "von": "Mueller"
+    }
+    ,
+    {
+      "Datum": "1.11.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "21.12.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "1.1.2020",
+      "von": "Mueller"
+    }
+    
+    
+  ] 
+}

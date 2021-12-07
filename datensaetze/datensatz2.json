@@ -1,0 +1,39 @@
+{
+  "Bezeichner": "Blechstanze",
+  "Hersteller": "Cutter++ gmbh",
+  "Standort": {
+    "Halle": 4,
+    "Abteilung": "Entwicklung",
+    "Platz": 14
+  },
+    "Wartung":[   
+    {
+      "Datum": "11.3.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "11.4.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "12.6.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "14.7.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "10.8.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "18.9.2019",
+      "von": "Mueller"
+    },
+    {
+      "Datum": "11.10.2019",
+      "von": "Mueller"
+    }
+  ] 
+}
