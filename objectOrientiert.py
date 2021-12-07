@@ -10,10 +10,9 @@ class Stanzmaschine:
     intervalDelayList = []
 
     # Konstruktor
-    def __init__(self, filename, minInterval):
+    def __init__(self, filename):
         self.filename = filename
-        self.minInterval = minInterval
-        self.setData()
+        self.openJsonFile()
         self.calcIntervalList()
 
     # Methoden
@@ -51,7 +50,7 @@ class Stanzmaschine:
 
             previousIterationDateEntry = thisIterationDateEntry
 
-    def setData(self):
+    def openJsonFile(self):
         try:
             with open(self.filename, "r") as file:
                 self.data = json.load(file)
@@ -59,13 +58,34 @@ class Stanzmaschine:
             print("no file found")
             return self.data
 
+    def setMaintenance(self, name):
+        tempDict = {
+            "Datum": datetime.date.today().strftime("%d.%m.%Y"),
+            "Name": name
+        }
+        print(tempDict)
+        self.data["Wartung"].append(tempDict)
+
     def showAllData(self):
         try:
             print(json.dumps(self.data, indent=4))
         except:
             print("failed")
 
-    def checkMaintenanceInterval(self):
+    def showHeader(self):
+        print(json.dumps(self.data["Bezeichner"]))
+        print(json.dumps(self.data["Hersteller"]))
+        print(json.dumps(self.data["Standort"], indent=4))
+
+    def saveJsonFile(self):
+        try:
+            with open(self.filename, "w") as outfile:
+                json.dump(self.data, outfile, indent=4)
+        except:
+            print("no file found")
+            return self.data
+
+    def checkMaintenanceInterval(self, minInterval):
         if (self.minInterval <= 0):
             print("invalid time interval - needs at least 1 day")
             return 0
@@ -77,22 +97,20 @@ class Stanzmaschine:
                     thisIterationDateEntry = datetime.datetime.strptime(
                         self.data["Wartung"][element]["Datum"], "%d.%m.%Y")
 
-                    if (abs((previousIterationDateEntry - thisIterationDateEntry).days) >= self.minInterval):
+                    if (abs((previousIterationDateEntry - thisIterationDateEntry).days) >= minInterval):
                         print(thisIterationDateEntry.strftime(
                             "%Y-%m-%d"), end="")
                         print(
-                            f" - {str(abs((previousIterationDateEntry - thisIterationDateEntry).days + self.minInterval))} Tage")
+                            f" - {str(abs((previousIterationDateEntry - thisIterationDateEntry).days + minInterval))} Tage")
                     previousIterationDateEntry = thisIterationDateEntry
 
         except:
             print("failed looping through data")
 
 
-maschiiiiiisch = Stanzmaschine("datensatz.json", 30)
-
-# maschiiiiiisch.showAllData()
-
-maschiiiiiisch.checkMaintenanceInterval()
-
-
-print(maschiiiiiisch.getIntervalDelayList())
+maschiiiiiisch = Stanzmaschine("datensatz.json")
+maschiiiiiisch.showHeader()
+maschiiiiiisch.setMaintenance("torsten")
+maschiiiiiisch.saveJsonFile()
+maschiiiiiisch.showAllData()
+maschiiiiiisch.checkMaintenanceInterval(30)
