@@ -22,18 +22,18 @@ class MachineController:
         self.machineList.append(Stanzmaschine(path))
 
     def removeMachineByPlacement(self, halle, platz):
-        foundMachine = 0
+        foundMachine = False
         for element in self.machineList:
 
             if element.data["Standort"]["Halle"] == halle and element.data["Standort"]["Platz"] == platz:
-                foundMachine = 1
+                foundMachine = True
                 print("removed machine:")
                 print("-------------------")
                 element.showHeader()
                 print("-------------------")
                 self.machineList.remove(element)
 
-        if foundMachine == 0:
+        if foundMachine == False:
             print("no machine with given parameters")
 
     def getLastMaintainedMachine(self):
