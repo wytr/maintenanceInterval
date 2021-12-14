@@ -1,116 +1,82 @@
-import json
+from stanzmaschine import Stanzmaschine
+import glob
 import datetime
 
 
-class Stanzmaschine:
-    # Attribute
-    filename = ""
-    data = 0
-    minInterval = 20
-    intervalDelayList = []
+class MachineController:
 
-    # Konstruktor
-    def __init__(self, filename):
-        self.filename = filename
-        self.openJsonFile()
-        self.calcIntervalList()
+    path = ""
+    machineList = []
 
-    # Methoden
+    def __init__(self, path):
+        self.path = path
+        self.setMachines(path)
 
-    def getBezeichner(self):
-        return self.data["Bezeichner"]
+    def setMachines(self, path):
 
-    def getHersteller(self):
-        return self.data["Hersteller"]
+        files = glob.glob(path, recursive=True)
+        for file in files:
+            self.machineList.append(Stanzmaschine(file))
 
-    def getStandort(self):
-        return self.data["Standort"]
+    def addMachineExplicit(self, path):
+        self.machineList.append(Stanzmaschine(path))
 
-    def getAnzahlWartungen(self):
-        return len(self.data["Wartung"])
+    def removeMachineByPlacement(self, halle, platz):
+        foundMachine = 0
+        for element in self.machineList:
 
-    def getDatumLetzteWartung(self):
-        return self.data["Wartung"][-1]["Datum"]
+            if element.data["Standort"]["Halle"] == halle and element.data["Standort"]["Platz"] == platz:
+                foundMachine = 1
+                print("removed machine:")
+                print("-------------------")
+                element.showHeader()
+                print("-------------------")
+                self.machineList.remove(element)
 
-    def getDatumErsteWartung(self):
-        return self.data["Wartung"][0]["Datum"]
+        if foundMachine == 0:
+            print("no machine with given parameters")
 
-    def getIntervalDelayList(self):
-        return(self.intervalDelayList)
+    def getLastMaintainedMachine(self):
 
-    def calcIntervalList(self):
+        lastMaintainedMachine = self.machineList[0]
 
-        for element in range(len(self.data["Wartung"])):
+        for machine in self.machineList:
 
-            thisIterationDateEntry = datetime.datetime.strptime(
-                self.data["Wartung"][element]["Datum"], "%d.%m.%Y")
-            if (element >= 1):
-                self.intervalDelayList.append(
-                    (previousIterationDateEntry - thisIterationDateEntry).days)
+            if (datetime.datetime.strptime(machine.getLastMaintenanceDate(), "%d.%m.%Y") > datetime.datetime.strptime(lastMaintainedMachine.getLastMaintenanceDate(), "%d.%m.%Y")):
+                lastMaintainedMachine = machine
 
-            previousIterationDateEntry = thisIterationDateEntry
+        return lastMaintainedMachine
 
-    def openJsonFile(self):
-        try:
-            with open(self.filename, "r") as file:
-                self.data = json.load(file)
-        except:
-            print("no file found")
-            return self.data
+    def getMachinesByMaintainer(self, name):
 
-    def setMaintenance(self, name):
-        tempDict = {
-            "Datum": datetime.date.today().strftime("%d.%m.%Y"),
-            "Name": name
-        }
-        print(tempDict)
-        self.data["Wartung"].append(tempDict)
+        maintainedByList = []
+        for machine in self.machineList:
+            for wartung in machine.data["Wartung"]:
+                if wartung["von"] == name:
+                    maintainedByList.append(machine)
+                    break
 
-    def showAllData(self):
-        try:
-            print(json.dumps(self.data, indent=4))
-        except:
-            print("failed")
+        return maintainedByList
 
-    def showHeader(self):
-        print(json.dumps(self.data["Bezeichner"]))
-        print(json.dumps(self.data["Hersteller"]))
-        print(json.dumps(self.data["Standort"], indent=4))
+    def getMachineCount(self):
+        return len(self.machineList)
 
-    def saveJsonFile(self):
-        try:
-            with open(self.filename, "w") as outfile:
-                json.dump(self.data, outfile, indent=4)
-        except:
-            print("no file found")
-            return self.data
+    def showIds(self):
 
-    def checkMaintenanceInterval(self, minInterval):
-        if (self.minInterval <= 0):
-            print("invalid time interval - needs at least 1 day")
-            return 0
-        try:
-            previousIterationDateEntry = datetime.datetime.strptime(
-                self.data["Wartung"][0]["Datum"], "%d.%m.%Y")
-            for element in range(len(self.data["Wartung"])):
-                if (element >= 1):
-                    thisIterationDateEntry = datetime.datetime.strptime(
-                        self.data["Wartung"][element]["Datum"], "%d.%m.%Y")
-
-                    if (abs((previousIterationDateEntry - thisIterationDateEntry).days) >= minInterval):
-                        print(thisIterationDateEntry.strftime(
-                            "%Y-%m-%d"), end="")
-                        print(
-                            f" - {str(abs((previousIterationDateEntry - thisIterationDateEntry).days + minInterval))} Tage")
-                    previousIterationDateEntry = thisIterationDateEntry
-
-        except:
-            print("failed looping through data")
+        for element in self.machineList:
+            print(element.data["Standort"])
 
 
-maschiiiiiisch = Stanzmaschine("datensatz.json")
-maschiiiiiisch.showHeader()
-maschiiiiiisch.setMaintenance("torsten")
-maschiiiiiisch.saveJsonFile()
-maschiiiiiisch.showAllData()
-maschiiiiiisch.checkMaintenanceInterval(30)
+if __name__ == "__main__":
+
+    control = MachineController('*.json')
+
+    # steuerung.machineList[0].showAllData()
+    # smaschinenPark.removeMachineByPlacement(2, 19)
+    print(f"Die Maschine: {control.getLastMaintainedMachine().getLocation()} wurde zuletzt am {control.getLastMaintainedMachine().getLastMaintenanceDate()} gewartet.")
+
+    for machine in control.getMachinesByMaintainer("Meier"):
+        print(
+            f"{machine.getIdentifier()} - {machine.getManufacturer()} - {machine.getLocation()}")
+
+    print(control.getMachineCount())
