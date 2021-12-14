@@ -74,9 +74,10 @@ if __name__ == "__main__":
     # steuerung.machineList[0].showAllData()
     # smaschinenPark.removeMachineByPlacement(2, 19)
     print(f"Die Maschine: {control.getLastMaintainedMachine().getLocation()} wurde zuletzt am {control.getLastMaintainedMachine().getLastMaintenanceDate()} gewartet.")
-
+    print("----------------------------------------------------------------------")
+    print("Folgende Maschinen wurden von Meier gewartet:")
     for machine in control.getMachinesByMaintainer("Meier"):
         print(
             f"{machine.getIdentifier()} - {machine.getManufacturer()} - {machine.getLocation()}")
-
+    print("----------------------------------------------------------------------")
     print(control.getMachineCount())
