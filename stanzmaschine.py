@@ -9,6 +9,8 @@ class Stanzmaschine:
     minInterval = 20
     intervalDelayList = []
     users = {}
+    stanzmuster = [0][0]
+
     # Konstruktor
 
     def __init__(self, filename):
@@ -109,3 +111,12 @@ class Stanzmaschine:
 
         except:
             print("failed looping through data")
+
+    def readConfig(self):
+        print("config loaded")
+
+    def setSheet(self, sheet):
+        print("sheet set")
+
+    def getSheet(self):
+        print("get sheet")
