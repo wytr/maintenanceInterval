@@ -1,24 +1,32 @@
-class Blech:
+import time
+import os
+
+class MetalSheet:
 
     n = 10
-    raster = []
-    programm = []
+    pattern = []
+    program = []
 
     def __init__(self):
+        self.initPattern()
 
-        self.programm = [1]
-        self.initRaster()
+    def addProgramPattern(self, number):
 
-    def initRaster(self):
+        if number not in self.program:
+            self.program.append(number)
+        else:
+            print("yikes! already added.")
 
-        self.raster = [[1 for x in range(self.n)] for y in range(self.n)]
+    def initPattern(self):
+
+        self.pattern = [[1 for x in range(self.n)] for y in range(self.n)]
 
     def showPattern(self):
 
         for x in range(self.n):
             for y in range(self.n):
 
-                if(self.raster[x][y] == 1):
+                if(self.pattern[x][y] == 1):
                     print('\u2588', end="")
                 else:
                     print(' ', end="")
@@ -32,15 +40,25 @@ class Blech:
         if len(pattern) == 10:
             for x in range(self.n):
                 for y in range(self.n):
-                    print("TODO")
+                    
+                    if self.pattern[x][y] == 1 and pattern[x][y] == 0:
+                        self.remove(x,y)
+                        print("KLNONK!")
+                        self.showPattern()
+                        time.sleep(0.1)
+                        os.system('cls')
+            self.showPattern()
+
+
             print()
         else:
             print("pattern file not compatible")
 
+
     def remove(self, x, y):
         try:
-            self.raster[x][y] = 0
-            print(f"removed {x},{y}")
+            self.pattern[x][y] = 0
+            #print(f"removed {x},{y}")
         except:
             print("WRONK!")
 
@@ -58,8 +76,5 @@ if __name__ == "__main__":
                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
-    testblech = Blech()
-    testblech.showPattern()
-    testblech.remove(2, 7)
-    testblech.showPattern()
+    testblech = MetalSheet()
     testblech.setPattern(testPattern)

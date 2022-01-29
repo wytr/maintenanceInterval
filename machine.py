@@ -2,14 +2,17 @@ import json
 import datetime
 
 
-class Stanzmaschine:
+class PunchingMachine:
     # Attribute
     filename = ""
     data = 0
     minInterval = 20
     intervalDelayList = []
     users = {}
-    stanzmuster = [0][0]
+
+    patternNumber = 0
+    pattern = [0][0]
+
 
     # Konstruktor
 
@@ -17,10 +20,18 @@ class Stanzmaschine:
         self.filename = filename
         self.openJsonFile()
         self.calcIntervalList()
+        self.setPattern()
 
     # Methoden
+    def process(self, metalsheet):
+        if self.getPatternNumber() in metalsheet.program:
+            metalsheet.setPattern(self.pattern)
+
     def getIdentifier(self):
         return self.data["Bezeichner"]
+
+    def getPatternNumber(self):
+        return self.patternNumber
 
     def getManufacturer(self):
         return self.data["Hersteller"]
@@ -42,6 +53,23 @@ class Stanzmaschine:
 
     def getMaintenanceListLen(self):
         return (len(self.data["Wartung"]))
+
+    def setPattern(self):
+
+        self.pattern = self.data["Muster"]
+        self.patternNumber = self.data["MusterNr"]
+
+    def getPattern(self):
+        return self.pattern
+
+    def getPatternNumber(self):
+        return self.patternNumber
+
+    def setSheet(self, sheet):
+        print("sheet set")
+
+    def getSheet(self):
+        print("get sheet")
 
     def calcIntervalList(self):
 
@@ -112,11 +140,8 @@ class Stanzmaschine:
         except:
             print("failed looping through data")
 
-    def readConfig(self):
-        print("config loaded")
+if __name__ == "__main__":
 
-    def setSheet(self, sheet):
-        print("sheet set")
+    testMachine = PunchingMachine("machine_config_1.json")
 
-    def getSheet(self):
-        print("get sheet")
+    print(testMachine.getPattern())
