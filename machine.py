@@ -1,6 +1,6 @@
 import json
 import datetime
-
+import time
 
 class PunchingMachine:
     # Attribute
@@ -26,6 +26,8 @@ class PunchingMachine:
     def process(self, metalsheet):
         if self.getPatternNumber() in metalsheet.program:
             metalsheet.setPattern(self.pattern)
+            print(f"Finished program: {self.getPatternNumber()}")
+            time.sleep(2)
 
     def getIdentifier(self):
         return self.data["Bezeichner"]

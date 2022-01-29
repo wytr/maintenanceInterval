@@ -76,8 +76,7 @@ class MachineController:
         for machine in self.productionLine:
 
             machine.process(sheet)
-            print(f"Finished stage: {control.productionLine.index(machine)+1}")
-            time.sleep(2)
+
 
 if __name__ == "__main__":
 

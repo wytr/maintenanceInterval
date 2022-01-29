@@ -17,6 +17,10 @@ class MetalSheet:
         else:
             print("yikes! already added.")
 
+    def clearProgram(self):
+        
+        self.program = []
+
     def initPattern(self):
 
         self.pattern = [[1 for x in range(self.n)] for y in range(self.n)]
